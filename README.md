@@ -30,14 +30,17 @@ source .venv/bin/activate
 pip install -e .
 
 cobol-migrate scan examples --output build
+
+# resolve COPY members from extra directories (repeatable):
+cobol-migrate scan src --copybook-path copybooks --copybook-path shared/cpy --output build
 ```
 
 Generated files:
 
 ```text
-build/inventory.json
-build/report.md
-build/dependencies.dot
+build/inventory.json    # versioned schema: units + metrics + unresolved deps
+build/report.md         # summary metrics, unresolved list, per-unit detail
+build/dependencies.dot  # call/copy graph; unresolved targets highlighted red
 ```
 
 Render the graph if Graphviz is installed:
@@ -55,11 +58,13 @@ pytest
 ## What the scanner finds
 
 - `PROGRAM-ID`
-- `COPY` dependencies
+- `COPY` dependencies (incl. `COPY ... REPLACING`, flagged for manual review)
 - static `CALL` targets
 - paragraph names
+- source format (fixed vs free) and fixed-format continuation handling
 - source file sizes and line counts
-- unresolved dependencies
+- copybook resolution against `--copybook-path` search paths
+- metrics: fan-in/fan-out, unreferenced programs/copybooks, unresolved dependencies
 
 ## Suggested roadmap
 

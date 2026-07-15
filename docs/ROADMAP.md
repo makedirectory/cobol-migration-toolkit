@@ -14,20 +14,21 @@ The guiding boundary: **inventory & discovery = free. Deep semantics, AI docs, e
 - Regex scanner: `PROGRAM-ID`, `COPY`, static `CALL`, paragraphs, line/byte counts, unresolved deps.
 - Emits `inventory.json`, `report.md`, `dependencies.dot`. CLI `cobol-migrate scan`.
 
-### v0.2 — trustworthy inventory
-- Fixed-format column handling + continuation lines; free-format detection.
-- Copybook resolution from configurable search paths (`--copybook-path`).
-- `COPY ... REPLACING` awareness (at least flag it).
-- Basic metrics: program count, fan-in/fan-out, orphan/unreferenced units.
+### v0.2 — trustworthy inventory ✅ (shipped)
+- ✅ Fixed-format column handling + continuation lines; free-format detection.
+- ✅ Copybook resolution from configurable search paths (`--copybook-path`).
+- ✅ `COPY ... REPLACING` awareness (captured and flagged for manual review).
+- ✅ Basic metrics: program/copybook counts, fan-in/fan-out, unreferenced units.
+- ✅ Versioned `inventory.json` schema (`schema_version: 1`) — pulled forward from v0.4.
 
-### v0.3 — better graphs & UX
+### v0.3 — better graphs & UX (next)
 - Call graph vs copybook graph as separate views; clustering by subsystem.
 - HTML report (self-contained) in addition to Markdown.
-- `--format json|md|dot|html`, exit codes for CI use.
+- `--format json|md|dot|html`, `--strict` exit codes for CI use.
 
 ### v0.4 — plugin architecture (unlocks the paid tier)
 - Define entry-point plugin interface so commercial analyzers load if installed (see SPEC).
-- Stable `inventory.json` schema (versioned) that paid tools consume/extend.
+- ✅ Stable, versioned `inventory.json` schema that paid tools consume/extend (landed in v0.2).
 
 ---
 
