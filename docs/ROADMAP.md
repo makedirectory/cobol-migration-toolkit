@@ -31,7 +31,8 @@ The guiding boundary: **inventory & discovery = free. Deep semantics, AI docs, e
 
 ---
 
-## Commercial tier (paid — separate private packages)
+## Commercial tier — "Cartograph" (paid — separate private packages)
+_Working name; pending trademark clearance. Chosen over "Estate" (too generic)._
 
 - **Grammar-based parser** (ANTLR/tree-sitter) replacing regex → real ASTs, accurate paragraph/section
   boundaries, data definitions.
@@ -42,10 +43,13 @@ The guiding boundary: **inventory & discovery = free. Deep semantics, AI docs, e
 - **Exports:** SARIF, OpenAPI candidate specs, and modernization **work items** (Jira/ADO).
 - **Effort & complexity scoring:** estimate migration effort per program/subsystem.
 
-## Hosted SaaS (paid — the assessment dashboard)
-- Point at / upload an estate → shareable assessment report with graphs, metrics, risk & effort.
-- Data-handling stance must be explicit (on-prem/self-host option for regulated buyers).
-- The free CLI report is the lead; the hosted report is the sale.
+## Cartograph dashboard (paid — deployed in-network, not a multi-tenant SaaS)
+- Point at an estate **inside the customer's network** → shareable assessment report with graphs,
+  metrics, risk & effort. Ships as a container/Helm deployable; air-gap capable.
+- **Local-first, source never leaves** — see [`DATA-HANDLING.md`](DATA-HANDLING.md). This is a product
+  principle, not a footnote; it's what lets regulated buyers adopt the free CLI in the first place.
+- LLM features default to customer-hosted models (no third-party API by default).
+- The free CLI report is the lead; the deployed Cartograph report is the sale.
 
 ## Content beats
 - Publish dependency graphs of public COBOL corpora.

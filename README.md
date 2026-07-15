@@ -7,8 +7,12 @@
 A dependency-analysis and documentation scaffold for COBOL modernization projects.
 
 > **Open-core:** this repository is the free, Apache-2.0 discovery core. Deep grammar-based
-> parsing, embedded SQL/CICS handling, AI documentation, SARIF/work-item export, and a hosted
-> assessment dashboard are part of a commercial tier — see [`docs/ROADMAP.md`](docs/ROADMAP.md).
+> parsing, embedded SQL/CICS handling, AI documentation, SARIF/work-item export, and an assessment
+> dashboard are part of **Cartograph**, the commercial tier — see [`docs/ROADMAP.md`](docs/ROADMAP.md).
+>
+> **Your COBOL never leaves your network.** The toolkit runs entirely locally with no telemetry, and
+> Cartograph deploys *inside* your environment rather than ingesting your source — see
+> [`docs/DATA-HANDLING.md`](docs/DATA-HANDLING.md).
 
 It scans COBOL and copybook files, extracts a useful first-pass inventory, and emits:
 
@@ -90,4 +94,4 @@ Contributions welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code o
 
 Licensed under the [Apache License 2.0](LICENSE). © 2026 Make Directory Developers, LLC.
 
-Need a full modernization assessment of your estate? Make Directory Developers offers mainframe & COBOL modernization services and a hosted assessment tier — [mk-dir.com](https://mk-dir.com) · andrew@mk-dir.com.
+Need a full modernization assessment of your estate? Make Directory Developers offers mainframe & COBOL modernization services and **Cartograph**, an in-network assessment tier — [mk-dir.com](https://mk-dir.com) · andrew@mk-dir.com.
