@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cobol-migration-toolkit"
+version = "0.1.0"
+description = "Inventory and dependency analysis for COBOL modernization"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<9"]
+
+[project.scripts]
+cobol-migrate = "cobol_migrate.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
