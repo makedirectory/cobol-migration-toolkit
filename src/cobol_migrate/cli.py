@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 
 from .analysis import build_inventory
+from .plugins import ScanContext, discover_analyzers, run_analyzers, select_analyzers
 from .report import write_dot, write_html, write_inventory, write_markdown
 from .scanner import index_copybooks, scan_tree
 
@@ -37,6 +38,12 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="exit non-zero if any CALL or copybook dependency is unresolved",
     )
+    scan.add_argument(
+        "--analyzers",
+        action="append",
+        metavar="{all,none,<name>}",
+        help="which analyzer plugins to run; repeatable (default: all discovered)",
+    )
     return parser
 
 
@@ -52,11 +59,18 @@ def run_scan(
     copybook_paths: list[Path],
     formats: list[str],
     strict: bool,
+    analyzers: list[str] | None = None,
 ) -> int:
     source = source.resolve()
     units = scan_tree(source)
     search_roots = [source, *(p.resolve() for p in copybook_paths)]
-    inventory = build_inventory(units, index_copybooks(search_roots))
+    copybook_index = index_copybooks(search_roots)
+
+    selected = select_analyzers(discover_analyzers(), analyzers)
+    ctx = ScanContext(units=units, copybook_index=copybook_index)
+    analyses = run_analyzers(selected, ctx)
+    analyzer_names = [a.name for a in selected]
+    inventory = build_inventory(units, copybook_index, analyses, analyzer_names)
 
     if "json" in formats:
         write_inventory(inventory, output)
@@ -73,6 +87,8 @@ def run_scan(
         f"({metrics['program_count']} programs, {metrics['copybook_count']} copybooks) "
         f"into {output}"
     )
+    if analyzer_names:
+        print(f"  analyzers: {', '.join(analyzer_names)}")
     unresolved = metrics["unresolved_call_count"] + metrics["unresolved_copybook_count"]
     if unresolved:
         print(
@@ -94,6 +110,7 @@ def main() -> None:
             args.copybook_path,
             resolve_formats(args.format),
             args.strict,
+            args.analyzers,
         )
         raise SystemExit(code)
 

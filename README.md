@@ -62,6 +62,29 @@ Run tests:
 pytest
 ```
 
+## Analyzer plugins
+
+Deeper analysis plugs into the core as **analyzers** discovered via the
+`cobol_migrate.analyzers` entry-point group. The core ships one built-in reference analyzer
+(`paragraph_count`); installed packages (e.g. the commercial **Cartograph** tier) register their
+own and run automatically — no core changes required.
+
+```bash
+cobol-migrate scan src --analyzers all           # default: every discovered analyzer
+cobol-migrate scan src --analyzers none          # inventory only
+cobol-migrate scan src --analyzers paragraph_count
+```
+
+Analyzer output is merged into each unit under `units[i].analyses.<name>` in `inventory.json`.
+Write your own by implementing the `Analyzer` protocol and registering it:
+
+```toml
+[project.entry-points."cobol_migrate.analyzers"]
+my_analyzer = "my_pkg.module:MyAnalyzer"
+```
+
+See [`docs/SPEC.md`](docs/SPEC.md) for the `Analyzer`/`ScanContext` contract.
+
 ## What the scanner finds
 
 - `PROGRAM-ID`

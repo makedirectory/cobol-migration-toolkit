@@ -29,16 +29,24 @@ class Unresolved(TypedDict):
 
 class Inventory(TypedDict):
     schema_version: int
+    analyzers: list[str]
     units: list[dict[str, object]]
     metrics: Metrics
     unresolved: Unresolved
 
 
-def build_inventory(units: list[CobolUnit], copybook_index: dict[str, str]) -> Inventory:
+def build_inventory(
+    units: list[CobolUnit],
+    copybook_index: dict[str, str],
+    analyses: dict[str, dict[str, dict[str, object]]] | None = None,
+    analyzer_names: list[str] | None = None,
+) -> Inventory:
     """Aggregate scanned units into the versioned inventory document.
 
     ``copybook_index`` maps an upper-cased copybook name to a resolving file path
     (see ``scanner.index_copybooks``); names absent from it are reported unresolved.
+    ``analyses`` holds optional per-unit analyzer output (see ``plugins``), merged
+    into each unit's entry under an ``analyses`` key.
     """
     programs = [u for u in units if u.kind == "program"]
     copybooks = [u for u in units if u.kind == "copybook"]
@@ -88,9 +96,17 @@ def build_inventory(units: list[CobolUnit], copybook_index: dict[str, str]) -> I
         "max_fan_in": max(fan_in.values(), default=0),
     }
 
+    unit_dicts: list[dict[str, object]] = []
+    for unit in units:
+        entry = unit.to_dict()
+        if analyses and unit.path in analyses:
+            entry["analyses"] = analyses[unit.path]
+        unit_dicts.append(entry)
+
     return {
         "schema_version": SCHEMA_VERSION,
-        "units": [unit.to_dict() for unit in units],
+        "analyzers": analyzer_names or [],
+        "units": unit_dicts,
         "metrics": metrics,
         "unresolved": {
             "copybooks": sorted(unresolved_copybooks),
