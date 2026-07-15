@@ -33,14 +33,21 @@ cobol-migrate scan examples --output build
 
 # resolve COPY members from extra directories (repeatable):
 cobol-migrate scan src --copybook-path copybooks --copybook-path shared/cpy --output build
+
+# choose output formats (default: all) and fail CI on unresolved deps:
+cobol-migrate scan src --format html --format json --output build
+cobol-migrate scan src --strict --output build   # exit 1 if anything is unresolved
 ```
 
-Generated files:
+Generated files (subset selectable with `--format {json,md,dot,html,all}`):
 
 ```text
 build/inventory.json    # versioned schema: units + metrics + unresolved deps
 build/report.md         # summary metrics, unresolved list, per-unit detail
-build/dependencies.dot  # call/copy graph; unresolved targets highlighted red
+build/report.html       # self-contained styled report (stat tiles + unit table)
+build/dependencies.dot  # combined call/copy graph; unresolved targets red
+build/calls.dot         # call graph only
+build/copybooks.dot     # copybook graph only
 ```
 
 Render the graph if Graphviz is installed:
