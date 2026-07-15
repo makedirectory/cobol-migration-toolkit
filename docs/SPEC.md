@@ -5,20 +5,30 @@ Scan COBOL/copybook sources and produce a first-pass **inventory and dependency 
 modernization discovery. Conservative by design; the OSS core is a discovery aid, not authoritative
 semantics.
 
-## Data model (`CobolUnit`, stable schema — versioned from v0.4)
+## Data model (`CobolUnit`, versioned schema — `schema_version: 1` since v0.2)
 ```
-path, kind (program|copybook), program_id,
-copybooks[], calls[], paragraphs[],
+path, kind (program|copybook), source_format (fixed|free), program_id,
+copybooks[], copy_replacing[], calls[], paragraphs[],
 line_count, byte_count
 ```
-`inventory.json` = `{ "schema_version": N, "units": [CobolUnit...], "unresolved": [...] }`.
+`inventory.json` =
+```
+{ "schema_version": 1,
+  "units": [CobolUnit...],
+  "metrics": { unit_count, program_count, copybook_count, call_edges, copy_edges,
+               unresolved_call_count, unresolved_copybook_count,
+               unreferenced_programs[], unreferenced_copybooks[],
+               copybooks_using_replacing[], max_fan_out, max_fan_in },
+  "unresolved": { "copybooks": [...], "calls": [...] } }
+```
 Paid plugins extend the unit with `data_items[]`, `data_flow`, `complexity`, `summary`, etc.
-— they must only **add** fields, never break the core schema.
+— they must only **add** fields and bump `schema_version` for any breaking change.
 
 ## Pipeline
 ```
-discover files (ext allowlist) → normalize (strip cols 1-6 & 73+, drop *,/ comments)
-  → regex extract → CobolUnit → aggregate → render (json|md|dot|html)
+discover files (ext allowlist) → detect fixed/free → normalize (columns + continuations,
+  drop *,/ comments) → regex extract → CobolUnit → resolve copybooks (--copybook-path)
+  → aggregate metrics → render (json|md|dot; html in v0.3)
 ```
 
 ## OSS ↔ commercial boundary (v0.4 plugin architecture)
