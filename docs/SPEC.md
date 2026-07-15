@@ -28,8 +28,11 @@ Paid plugins extend the unit with `data_items[]`, `data_flow`, `complexity`, `su
 ```
 discover files (ext allowlist) → detect fixed/free → normalize (columns + continuations,
   drop *,/ comments) → regex extract → CobolUnit → resolve copybooks (--copybook-path)
-  → aggregate metrics → render (json|md|dot; html in v0.3)
+  → aggregate metrics → render (json|md|dot|html, selectable via --format)
 ```
+`--strict` returns a non-zero exit code when any CALL or copybook dependency is unresolved,
+so a scan can gate CI. DOT output is emitted as a combined graph plus separate call-only and
+copybook-only views.
 
 ## OSS ↔ commercial boundary (v0.4 plugin architecture)
 - Core exposes a Python **entry-point group**, e.g. `cobol_migrate.analyzers`.

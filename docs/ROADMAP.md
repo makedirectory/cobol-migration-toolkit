@@ -21,10 +21,11 @@ The guiding boundary: **inventory & discovery = free. Deep semantics, AI docs, e
 - ✅ Basic metrics: program/copybook counts, fan-in/fan-out, unreferenced units.
 - ✅ Versioned `inventory.json` schema (`schema_version: 1`) — pulled forward from v0.4.
 
-### v0.3 — better graphs & UX (next)
-- Call graph vs copybook graph as separate views; clustering by subsystem.
-- HTML report (self-contained) in addition to Markdown.
-- `--format json|md|dot|html`, `--strict` exit codes for CI use.
+### v0.3 — better graphs & UX ✅ (shipped)
+- ✅ Call graph vs copybook graph as separate views (`calls.dot`, `copybooks.dot` + combined).
+- ✅ Self-contained HTML report (stat tiles + unit table) in addition to Markdown.
+- ✅ `--format {json,md,dot,html,all}` selection; `--strict` non-zero exit for CI use.
+- ⏭ Clustering by subsystem deferred (needs a subsystem/ownership heuristic) — revisit post-v0.4.
 
 ### v0.4 — plugin architecture (unlocks the paid tier)
 - Define entry-point plugin interface so commercial analyzers load if installed (see SPEC).

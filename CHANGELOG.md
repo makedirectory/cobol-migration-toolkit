@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] — better graphs & UX
+
+### Added
+- Self-contained styled **HTML report** (`report.html`) with summary stat tiles, unresolved
+  banners, and a per-unit table; no external assets.
+- `--format {json,md,dot,html,all}` (repeatable) to select which outputs are written.
+- `--strict` flag: exit non-zero when any CALL or copybook dependency is unresolved (CI gating).
+- Split dependency graphs: `calls.dot` and `copybooks.dot` alongside the combined `dependencies.dot`.
+
+### Changed
+- `cli` scan logic extracted into a testable `run_scan(...)` returning an exit code.
+- Report writers now each ensure the output directory exists (formats can be emitted independently).
+
 ## [0.2.0] — trustworthy inventory
 
 ### Added
@@ -33,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `inventory.json`, `report.md`, and `dependencies.dot` output.
 - `cobol-migrate scan` CLI, tests, and CI.
 
-[Unreleased]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/makedirectory/cobol-migration-toolkit/releases/tag/v0.1.0
