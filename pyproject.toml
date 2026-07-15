@@ -6,14 +6,40 @@ build-backend = "setuptools.build_meta"
 name = "cobol-migration-toolkit"
 version = "0.1.0"
 description = "Inventory and dependency analysis for COBOL modernization"
+readme = "README.md"
 requires-python = ">=3.11"
+license = "Apache-2.0"
+authors = [{ name = "Make Directory Developers, LLC", email = "andrew@mk-dir.com" }]
+keywords = ["cobol", "mainframe", "modernization", "static-analysis", "dependency-graph"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Disassemblers",
+]
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=8,<9"]
+dev = ["pytest>=8,<9", "ruff>=0.8,<1", "mypy>=1.11,<2"]
+
+[project.urls]
+Homepage = "https://github.com/makedirectory/cobol-migration-toolkit"
+Issues = "https://github.com/makedirectory/cobol-migration-toolkit/issues"
 
 [project.scripts]
 cobol-migrate = "cobol_migrate.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true

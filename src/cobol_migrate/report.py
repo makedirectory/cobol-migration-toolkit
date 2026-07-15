@@ -16,18 +16,20 @@ def write_markdown(units: list[CobolUnit], output: Path) -> None:
     known = {unit.program_id for unit in units if unit.program_id}
     lines = ["# COBOL Inventory", "", f"Scanned units: **{len(units)}**", ""]
     for unit in units:
-        lines.extend([
-            f"## `{unit.path}`",
-            "",
-            f"- Type: `{unit.kind}`",
-            f"- Program ID: `{unit.program_id or 'unknown'}`",
-            f"- Lines: {unit.line_count}",
-            f"- COPY dependencies: {', '.join(unit.copybooks) or 'none'}",
-            f"- CALL targets: {', '.join(unit.calls) or 'none'}",
-            f"- Unresolved static calls: {', '.join(c for c in unit.calls if c not in known) or 'none'}",
-            f"- Paragraphs: {', '.join(unit.paragraphs) or 'none'}",
-            "",
-        ])
+        lines.extend(
+            [
+                f"## `{unit.path}`",
+                "",
+                f"- Type: `{unit.kind}`",
+                f"- Program ID: `{unit.program_id or 'unknown'}`",
+                f"- Lines: {unit.line_count}",
+                f"- COPY dependencies: {', '.join(unit.copybooks) or 'none'}",
+                f"- CALL targets: {', '.join(unit.calls) or 'none'}",
+                f"- Unresolved static calls: {', '.join(c for c in unit.calls if c not in known) or 'none'}",
+                f"- Paragraphs: {', '.join(unit.paragraphs) or 'none'}",
+                "",
+            ]
+        )
     (output / "report.md").write_text("\n".join(lines), encoding="utf-8")
 
 

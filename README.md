@@ -1,6 +1,14 @@
 # COBOL Migration Toolkit
 
+[![CI](https://github.com/makedirectory/cobol-migration-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/makedirectory/cobol-migration-toolkit/actions/workflows/ci.yml)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+![Python](https://img.shields.io/badge/python-3.11%2B-blue)
+
 A dependency-analysis and documentation scaffold for COBOL modernization projects.
+
+> **Open-core:** this repository is the free, Apache-2.0 discovery core. Deep grammar-based
+> parsing, embedded SQL/CICS handling, AI documentation, SARIF/work-item export, and a hosted
+> assessment dashboard are part of a commercial tier — see [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 It scans COBOL and copybook files, extracts a useful first-pass inventory, and emits:
 
@@ -63,3 +71,23 @@ pytest
 ## Safety and accuracy
 
 Treat generated output as an inventory aid, not authoritative program semantics. Real COBOL estates include vendor extensions, preprocessors, embedded SQL, CICS statements, generated code, and local conventions.
+
+## Roadmap & design
+
+See [`docs/ROADMAP.md`](docs/ROADMAP.md) (incl. the open-core boundary) and [`docs/SPEC.md`](docs/SPEC.md).
+
+## Part of the COBOL Modernization Starters
+
+- **[cobol-rest-bridge](https://github.com/makedirectory/cobol-rest-bridge)** — expose COBOL through REST
+- **[cobol-migration-toolkit](https://github.com/makedirectory/cobol-migration-toolkit)** — inventory & dependency analysis (this repo)
+- **[cobol-to-rust](https://github.com/makedirectory/cobol-to-rust)** — a COBOL-to-Rust transpiler scaffold
+
+## Contributing
+
+Contributions welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md). Report vulnerabilities per [SECURITY.md](SECURITY.md).
+
+## License & commercial support
+
+Licensed under the [Apache License 2.0](LICENSE). © 2026 Make Directory Developers, LLC.
+
+Need a full modernization assessment of your estate? Make Directory Developers offers mainframe & COBOL modernization services and a hosted assessment tier — [mk-dir.com](https://mk-dir.com) · andrew@mk-dir.com.
