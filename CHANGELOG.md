@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.1]
+
+### Added
+- `ScanContext.root` and `ScanContext.read_source(unit, normalized=?)` so analyzer plugins can
+  access unit source text (needed by real analyzers, e.g. complexity/grammar-based ones).
+
 ## [0.4.0] — plugin architecture
 
 ### Added
@@ -59,7 +65,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `inventory.json`, `report.md`, and `dependencies.dot` output.
 - `cobol-migrate scan` CLI, tests, and CI.
 
-[Unreleased]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.1.0...v0.2.0

@@ -17,9 +17,10 @@ from __future__ import annotations
 import sys
 from dataclasses import dataclass, field
 from importlib.metadata import entry_points
+from pathlib import Path
 from typing import Protocol, runtime_checkable
 
-from .scanner import CobolUnit
+from .scanner import CobolUnit, normalize_source
 
 ENTRY_POINT_GROUP = "cobol_migrate.analyzers"
 
@@ -29,11 +30,23 @@ AnalysisResults = dict[str, dict[str, dict[str, object]]]
 
 @dataclass
 class ScanContext:
-    """Read-only context handed to every analyzer."""
+    """Read-only context handed to every analyzer.
+
+    ``root`` is the scanned source tree; analyzers that need the raw text (e.g. a
+    grammar-based or complexity analyzer) read it via :meth:`read_source`.
+    """
 
     units: list[CobolUnit]
     copybook_index: dict[str, str]
+    root: Path | None = None
     options: dict[str, object] = field(default_factory=dict)
+
+    def read_source(self, unit: CobolUnit, *, normalized: bool = False) -> str:
+        """Return the source of ``unit`` (raw, or column/comment-normalized)."""
+        if self.root is None:
+            raise ValueError("ScanContext.root is not set; cannot read unit source")
+        raw = (self.root / unit.path).read_text(encoding="utf-8", errors="replace")
+        return normalize_source(raw, unit.source_format) if normalized else raw
 
 
 @runtime_checkable

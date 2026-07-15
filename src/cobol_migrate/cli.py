@@ -67,7 +67,7 @@ def run_scan(
     copybook_index = index_copybooks(search_roots)
 
     selected = select_analyzers(discover_analyzers(), analyzers)
-    ctx = ScanContext(units=units, copybook_index=copybook_index)
+    ctx = ScanContext(units=units, copybook_index=copybook_index, root=source)
     analyses = run_analyzers(selected, ctx)
     analyzer_names = [a.name for a in selected]
     inventory = build_inventory(units, copybook_index, analyses, analyzer_names)

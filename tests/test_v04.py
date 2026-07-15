@@ -86,3 +86,23 @@ def test_inventory_without_analyzers_omits_key(tmp_path):
     inventory = build_inventory(units, {})
     assert inventory["analyzers"] == []
     assert "analyses" not in inventory["units"][0]
+
+
+def test_scancontext_read_source(tmp_path):
+    units = _units(tmp_path)
+    ctx = ScanContext(units=units, copybook_index={}, root=tmp_path)
+    raw = ctx.read_source(units[0])
+    assert "PROGRAM-ID. PROG." in raw
+    # normalized form strips the fixed-format sequence/indicator columns
+    assert "MAIN-PARA." in ctx.read_source(units[0], normalized=True)
+
+
+def test_scancontext_read_source_requires_root(tmp_path):
+    units = _units(tmp_path)
+    ctx = ScanContext(units=units, copybook_index={})
+    try:
+        ctx.read_source(units[0])
+    except ValueError as exc:
+        assert "root is not set" in str(exc)
+    else:
+        raise AssertionError("expected ValueError when root is unset")
