@@ -27,9 +27,13 @@ The guiding boundary: **inventory & discovery = free. Deep semantics, AI docs, e
 - ✅ `--format {json,md,dot,html,all}` selection; `--strict` non-zero exit for CI use.
 - ⏭ Clustering by subsystem deferred (needs a subsystem/ownership heuristic) — revisit post-v0.4.
 
-### v0.4 — plugin architecture (unlocks the paid tier)
-- Define entry-point plugin interface so commercial analyzers load if installed (see SPEC).
+### v0.4 — plugin architecture ✅ (shipped) — unlocks the paid tier
+- ✅ `cobol_migrate.analyzers` entry-point interface: installed packages' analyzers auto-register.
+- ✅ `Analyzer` protocol + `ScanContext`; results merged into `units[i].analyses`; `--analyzers` selection.
+- ✅ Built-in reference analyzer (`paragraph_count`) as a template; failing plugins are isolated.
 - ✅ Stable, versioned `inventory.json` schema that paid tools consume/extend (landed in v0.2).
+- ➡️ **Cartograph** analyzers (grammar parser, data-flow, embedded SQL/CICS, LLM docs, exports)
+  now build as separate private packages against this interface — no further core changes needed.
 
 ---
 

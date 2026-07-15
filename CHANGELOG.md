@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] — plugin architecture
+
+### Added
+- Analyzer plugin interface (`plugins` module): `Analyzer` protocol + `ScanContext`, discovered
+  via the `cobol_migrate.analyzers` entry-point group. Installed packages' analyzers auto-register.
+- Built-in reference analyzer `paragraph_count` as a template for third-party/commercial analyzers.
+- `--analyzers {all,none,<name>}` (repeatable) to select which analyzers run.
+- Analyzer output merged into `units[i].analyses.<name>`; new top-level `analyzers` list in
+  `inventory.json` records which ran. A failing plugin warns and is skipped, never aborting a scan.
+
+### Changed
+- `build_inventory(...)` accepts optional analyzer results; `run_scan(...)` discovers and runs analyzers.
+
 ## [0.3.0] — better graphs & UX
 
 ### Added
@@ -46,7 +59,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `inventory.json`, `report.md`, and `dependencies.dot` output.
 - `cobol-migrate scan` CLI, tests, and CI.
 
-[Unreleased]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/makedirectory/cobol-migration-toolkit/releases/tag/v0.1.0

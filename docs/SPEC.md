@@ -34,17 +34,27 @@ discover files (ext allowlist) → detect fixed/free → normalize (columns + co
 so a scan can gate CI. DOT output is emitted as a combined graph plus separate call-only and
 copybook-only views.
 
-## OSS ↔ commercial boundary (v0.4 plugin architecture)
-- Core exposes a Python **entry-point group**, e.g. `cobol_migrate.analyzers`.
+## OSS ↔ commercial boundary (plugin architecture — shipped in v0.4)
+- Core exposes the entry-point group **`cobol_migrate.analyzers`** (see `plugins.py`).
 - Each analyzer implements:
   ```python
   class Analyzer(Protocol):
       name: str
-      def analyze(self, unit: CobolUnit, ctx: ScanContext) -> dict: ...  # merged into output
+      def analyze(self, unit: CobolUnit, ctx: ScanContext) -> dict[str, object]: ...
   ```
-- If a paid package (e.g. `cobol-migrate-pro`) is installed, its analyzers auto-register; otherwise the
-  core runs alone. **No core code changes, no relicensing** — the moat is the plugin, not the license.
-- `cobol-migrate scan ... --analyzers all|<name>` selects which run.
+  `ScanContext` carries `units`, `copybook_index`, and `options`. An analyzer's non-empty
+  return value is merged into that unit's inventory entry under `units[i].analyses[<name>]`;
+  the top-level `analyzers` list records which ran.
+- `discover_analyzers()` returns the built-in reference analyzer (`paragraph_count`) plus any
+  registered by installed packages. A commercial package registers its own analyzers:
+  ```toml
+  [project.entry-points."cobol_migrate.analyzers"]
+  my_analyzer = "my_pkg.module:MyAnalyzer"
+  ```
+- If a paid package (e.g. Cartograph) is installed its analyzers auto-register; otherwise the
+  core runs with only its built-in. **No core changes, no relicensing** — the moat is the plugin.
+- `cobol-migrate scan ... --analyzers {all,none,<name>}` (repeatable) selects which run.
+- A failing plugin warns to stderr and is skipped; it never aborts a scan.
 
 ## Config
 - `--copybook-path` (repeatable), `--format`, `--output`, extension allowlist override.
