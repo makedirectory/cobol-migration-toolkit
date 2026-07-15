@@ -42,7 +42,8 @@ copybook-only views.
       name: str
       def analyze(self, unit: CobolUnit, ctx: ScanContext) -> dict[str, object]: ...
   ```
-  `ScanContext` carries `units`, `copybook_index`, and `options`. An analyzer's non-empty
+  `ScanContext` carries `units`, `copybook_index`, `root`, and `options`, plus
+  `read_source(unit, normalized=?)` for analyzers that need the raw/normalized text. An analyzer's non-empty
   return value is merged into that unit's inventory entry under `units[i].analyses[<name>]`;
   the top-level `analyzers` list records which ran.
 - `discover_analyzers()` returns the built-in reference analyzer (`paragraph_count`) plus any
