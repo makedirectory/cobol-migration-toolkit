@@ -58,8 +58,12 @@ copybook-only views.
 - A failing plugin warns to stderr and is skipped; it never aborts a scan.
 
 ## Config
-- `--copybook-path` (repeatable), `--format`, `--output`, extension allowlist override.
-- Search-path & dialect config file (`.cobolmigrate.toml`) from v0.2.
+- Flags: `--copybook-path` (repeatable), `--format`, `--output`, `--strict`, `--analyzers`, `--config`.
+- `.cobolmigrate.toml` (v0.5): auto-discovered in the source dir or cwd, or via `--config`. Keys:
+  `copybook_paths`, `format`, `strict`, `analyzers`, `extensions` (allowlist override), `output`.
+  Precedence: **CLI flags override the file; the file overrides built-in defaults.** Config-relative
+  `copybook_paths` resolve against the config file's directory. Unknown keys (e.g. `dialect`) pass
+  through to analyzers via `ScanContext.options`.
 
 ## Output formats
 - `inventory.json` (machine, stable schema), `report.md`, `dependencies.dot`, `report.html` (v0.3).

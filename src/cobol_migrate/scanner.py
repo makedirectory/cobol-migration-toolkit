@@ -125,17 +125,19 @@ def scan_file(path: Path, root: Path) -> CobolUnit:
     )
 
 
-def scan_tree(root: Path) -> list[CobolUnit]:
-    return [scan_file(path, root) for path in sorted(root.rglob("*")) if path.suffix.lower() in ALL_EXTENSIONS]
+def scan_tree(root: Path, extensions: set[str] | None = None) -> list[CobolUnit]:
+    allowed = extensions or ALL_EXTENSIONS
+    return [scan_file(path, root) for path in sorted(root.rglob("*")) if path.suffix.lower() in allowed]
 
 
-def index_copybooks(roots: list[Path]) -> dict[str, str]:
+def index_copybooks(roots: list[Path], extensions: set[str] | None = None) -> dict[str, str]:
     """Map an upper-cased copybook name (file stem) to the first file that provides it."""
+    allowed = extensions or ALL_EXTENSIONS
     index: dict[str, str] = {}
     for base in roots:
         if not base.exists():
             continue
         for path in sorted(base.rglob("*")):
-            if path.suffix.lower() in ALL_EXTENSIONS:
+            if path.suffix.lower() in allowed:
                 index.setdefault(path.stem.upper(), str(path))
     return index

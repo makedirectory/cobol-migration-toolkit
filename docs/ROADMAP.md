@@ -34,6 +34,15 @@ The guiding boundary: **inventory & discovery = free. Deep semantics, AI docs, e
 - ✅ Stable, versioned `inventory.json` schema that paid tools consume/extend (landed in v0.2).
 - ➡️ **Cartograph** analyzers (grammar parser, data-flow, embedded SQL/CICS, LLM docs, exports)
   now build as separate private packages against this interface — no further core changes needed.
+- ✅ v0.4.1 — `ScanContext.read_source` so analyzers can access unit source text.
+
+### v0.5 — config file ✅ (shipped)
+- ✅ `.cobolmigrate.toml` (auto-discovered or `--config`): copybook paths, formats, strict,
+  analyzers, extension allowlist override, output. CLI flags override the file.
+- ✅ Unknown keys (e.g. `dialect`) pass through to analyzers via `ScanContext.options`.
+
+### v0.6 — next
+- Subsystem clustering in graphs; embedded graph in the HTML report; `--fail-on` metric thresholds.
 
 ---
 
