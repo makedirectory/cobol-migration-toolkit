@@ -41,8 +41,13 @@ The guiding boundary: **inventory & discovery = free. Deep semantics, AI docs, e
   analyzers, extension allowlist override, output. CLI flags override the file.
 - ✅ Unknown keys (e.g. `dialect`) pass through to analyzers via `ScanContext.options`.
 
-### v0.6 — next
-- Subsystem clustering in graphs; embedded graph in the HTML report; `--fail-on` metric thresholds.
+### v0.6 — graphs & gating ✅ (shipped)
+- ✅ Subsystem clustering in DOT graphs (by top-level directory).
+- ✅ Embedded dependency graph in the HTML report (inline SVG via Graphviz if present, else DOT source — stays self-contained).
+- ✅ `--fail-on METRIC[:MAX]` (repeatable) metric-threshold gating for CI; also a `fail_on` config key.
+
+### v0.7 — next
+- Richer HTML (filterable unit table); `inventory.json` JSON Schema published; incremental/cached scans.
 
 ---
 

@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] — graphs & gating
+
+### Added
+- **Subsystem clustering** in DOT graphs — source-unit nodes are grouped into `subgraph cluster_*`
+  by their top-level directory.
+- **Embedded dependency graph** in the HTML report: an inline SVG rendered via Graphviz (`dot`) when
+  available, otherwise the DOT source in a `<details>` — always self-contained (no external assets).
+- **`--fail-on METRIC[:MAX]`** (repeatable) and a `fail_on` config key: exit non-zero when a metric
+  exceeds a threshold (default 0; list metrics compare length). Generalizes `--strict`.
+
 ## [0.5.0] — configuration file
 
 ### Added
@@ -78,7 +88,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `inventory.json`, `report.md`, and `dependencies.dot` output.
 - `cobol-migrate scan` CLI, tests, and CI.
 
-[Unreleased]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.3.0...v0.4.0

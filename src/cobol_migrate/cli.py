@@ -5,7 +5,7 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-from .analysis import build_inventory
+from .analysis import Metrics, build_inventory
 from .config import Config, find_config, load_config
 from .plugins import ScanContext, discover_analyzers, run_analyzers, select_analyzers
 from .report import write_dot, write_html, write_inventory, write_markdown
@@ -53,7 +53,41 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="{all,none,<name>}",
         help="which analyzer plugins to run; repeatable (default: all discovered)",
     )
+    scan.add_argument(
+        "--fail-on",
+        action="append",
+        metavar="METRIC[:MAX]",
+        help="exit non-zero if a metric exceeds MAX (default 0); repeatable. "
+        "e.g. --fail-on unresolved_call_count --fail-on max_fan_in:20",
+    )
     return parser
+
+
+def evaluate_fail_on(metrics: Metrics, checks: list[str]) -> list[str]:
+    """Return a list of failure messages for any `METRIC[:MAX]` check that is exceeded."""
+    failures: list[str] = []
+    md: dict[str, object] = dict(metrics)
+    for check in checks:
+        key, sep, raw_max = check.partition(":")
+        try:
+            threshold = int(raw_max) if sep else 0
+        except ValueError:
+            failures.append(f"--fail-on '{check}': threshold must be an integer")
+            continue
+        if key not in md:
+            failures.append(f"--fail-on '{key}': unknown metric")
+            continue
+        value = md[key]
+        if isinstance(value, list):
+            actual = len(value)
+        elif isinstance(value, int):
+            actual = value
+        else:
+            failures.append(f"--fail-on '{key}': not a numeric metric")
+            continue
+        if actual > threshold:
+            failures.append(f"{key}={actual} exceeds {threshold}")
+    return failures
 
 
 def resolve_formats(selected: list[str] | None) -> list[str]:
@@ -71,6 +105,7 @@ def run_scan(
     analyzers: list[str] | None = None,
     extensions: set[str] | None = None,
     options: dict[str, object] | None = None,
+    fail_on: list[str] | None = None,
 ) -> int:
     source = source.resolve()
     units = scan_tree(source, extensions)
@@ -106,8 +141,14 @@ def run_scan(
             f"  {metrics['unresolved_call_count']} unresolved CALLs, "
             f"{metrics['unresolved_copybook_count']} unresolved copybooks"
         )
+    failures: list[str] = []
     if strict and unresolved:
-        print("Failing due to unresolved dependencies (--strict).", file=sys.stderr)
+        failures.append(f"unresolved dependencies (--strict): {unresolved}")
+    if fail_on:
+        failures.extend(evaluate_fail_on(metrics, fail_on))
+    if failures:
+        for failure in failures:
+            print(f"fail-on: {failure}", file=sys.stderr)
         return 1
     return 0
 
@@ -121,6 +162,7 @@ class ResolvedScan:
     analyzers: list[str] | None
     extensions: set[str] | None
     options: dict[str, object]
+    fail_on: list[str] | None
 
 
 def merge_config(args: argparse.Namespace, config: Config) -> ResolvedScan:
@@ -135,6 +177,7 @@ def merge_config(args: argparse.Namespace, config: Config) -> ResolvedScan:
         analyzers=args.analyzers if args.analyzers else config.analyzers,
         extensions=config.extensions,
         options=config.options,
+        fail_on=args.fail_on if args.fail_on else config.fail_on,
     )
 
 
@@ -146,7 +189,17 @@ def main() -> None:
         if config.path:
             print(f"Using config {config.path}")
         r = merge_config(args, config)
-        code = run_scan(source, r.output, r.copybook_paths, r.formats, r.strict, r.analyzers, r.extensions, r.options)
+        code = run_scan(
+            source,
+            r.output,
+            r.copybook_paths,
+            r.formats,
+            r.strict,
+            r.analyzers,
+            r.extensions,
+            r.options,
+            r.fail_on,
+        )
         raise SystemExit(code)
 
 
