@@ -3,7 +3,7 @@
 **Last updated:** 2026-07-15 · **Mode:** Clean-slate (beta) · **Latest:** v0.5.0
 
 > Tracks milestone **state** for this repo. For **how** we work (build cycle, review gate, layering,
-> non-negotiables), see the shared **`PROCESS.md`** in the workspace root.
+> non-negotiables), see the shared **`PROCESS.md`** in the [cartograph-web docs handbook](https://github.com/makedirectory/cartograph-web/blob/main/apps/docs/docs/handbook/process.md).
 >
 > **Legend:** ⬜ Not started · 🔄 In progress · ✅ Complete · ⚠️ Blocked · — N/A
 > Columns follow the build cycle: **Impl · Tests · Docs · Reviewed** (PR + CI green).
@@ -56,4 +56,4 @@ and a `.cobolmigrate.toml` config (v0.5). CI runs ruff + mypy + pytest on Python
 
 ---
 
-*Companion: shared `PROCESS.md` (workspace root).*
+*Companion: shared `PROCESS.md` (cartograph-web docs handbook).*
