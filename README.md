@@ -109,6 +109,15 @@ Write your own by implementing the `Analyzer` protocol and registering it:
 my_analyzer = "my_pkg.module:MyAnalyzer"
 ```
 
+**Inventory analyzers** are a second plugin type that run once over the whole built inventory (so they
+can aggregate per-unit analyzer output — e.g. an estate-wide effort rollup). Their result lands in
+top-level `reports.<name>` and is surfaced in the Markdown/HTML reports:
+
+```toml
+[project.entry-points."cobol_migrate.inventory_analyzers"]
+my_rollup = "my_pkg.module:MyRollup"
+```
+
 See [`docs/SPEC.md`](docs/SPEC.md) for the `Analyzer`/`ScanContext` contract.
 
 ## What the scanner finds

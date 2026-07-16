@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] — inventory analyzers
+
+### Added
+- **Inventory analyzers** — a second plugin type via the `cobol_migrate.inventory_analyzers`
+  entry-point group. An `InventoryAnalyzer` runs once over the built inventory (after per-unit
+  analyses are merged) and its result lands in a new top-level `reports` section of `inventory.json`.
+  Enables estate-level rollups without further core changes.
+- `reports` surfaced in the Markdown and HTML reports; `--analyzers` now selects both plugin types.
+
+### Changed
+- `Inventory` gains a `reports` field (defaults to `{}`); `select_analyzers` is generic over both
+  analyzer kinds.
+
 ## [0.6.0] — graphs & gating
 
 ### Added
@@ -88,7 +101,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `inventory.json`, `report.md`, and `dependencies.dot` output.
 - `cobol-migrate scan` CLI, tests, and CI.
 
-[Unreleased]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.4.0...v0.4.1

@@ -46,7 +46,13 @@ The guiding boundary: **inventory & discovery = free. Deep semantics, AI docs, e
 - ✅ Embedded dependency graph in the HTML report (inline SVG via Graphviz if present, else DOT source — stays self-contained).
 - ✅ `--fail-on METRIC[:MAX]` (repeatable) metric-threshold gating for CI; also a `fail_on` config key.
 
-### v0.7 — next
+### v0.7 — inventory analyzers ✅ (shipped)
+- ✅ Second plugin type: **inventory analyzers** (`cobol_migrate.inventory_analyzers`) run once over
+  the built inventory (so they can aggregate per-unit analyzer output); results land in top-level
+  `reports`. Enables estate-level rollups (e.g. Cartograph's effort rollup) with no further core changes.
+- ✅ `reports` surfaced in the Markdown and HTML reports; `--analyzers` selects both plugin types.
+
+### v0.8 — next
 - Richer HTML (filterable unit table); `inventory.json` JSON Schema published; incremental/cached scans.
 
 ---
