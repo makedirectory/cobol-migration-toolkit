@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] — configuration file
+
+### Added
+- `.cobolmigrate.toml` project config (new `config` module), auto-discovered in the source
+  directory or cwd, or selected with `--config`. Supports `copybook_paths`, `format`, `strict`,
+  `analyzers`, `extensions` (file-type allowlist override), and `output`.
+- CLI flags override config-file values; unknown keys (e.g. `dialect`) pass through to analyzers
+  via `ScanContext.options`.
+- `scan_tree`/`index_copybooks` accept an optional extension allowlist.
+
+### Changed
+- `--output` now defaults to the config value (or `build`) instead of a hard-coded default.
+
 ## [0.4.1]
 
 ### Added
@@ -65,7 +78,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `inventory.json`, `report.md`, and `dependencies.dot` output.
 - `cobol-migrate scan` CLI, tests, and CI.
 
-[Unreleased]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.2.0...v0.3.0

@@ -3,6 +3,11 @@
 [![CI](https://github.com/makedirectory/cobol-migration-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/makedirectory/cobol-migration-toolkit/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
+![Status: beta](https://img.shields.io/badge/status-beta-orange)
+
+> **Beta — in active development.** Interfaces may still change before 1.0. We're actively
+> looking for feedback: please [open an issue](https://github.com/makedirectory/cobol-migration-toolkit/issues)
+> with what worked, what didn't, and what your COBOL estate needs.
 
 A dependency-analysis and documentation scaffold for COBOL modernization projects.
 
@@ -60,6 +65,23 @@ Run tests:
 
 ```bash
 pytest
+```
+
+## Configuration (`.cobolmigrate.toml`)
+
+Keep project settings in a file instead of long command lines. The toolkit auto-discovers a
+`.cobolmigrate.toml` in the scanned source directory (or the current directory), or point at one
+with `--config`. **CLI flags override the file; the file supplies defaults.**
+
+```toml
+# .cobolmigrate.toml
+copybook_paths = ["copybooks", "shared/cpy"]   # resolved relative to this file
+format = ["json", "html"]
+strict = true
+analyzers = ["all"]
+extensions = [".cbl", ".cob", ".cpy"]           # override the file-type allowlist
+output = "build"
+dialect = "ibm"                                 # unknown keys pass through to analyzers
 ```
 
 ## Analyzer plugins
