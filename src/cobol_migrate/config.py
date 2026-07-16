@@ -23,7 +23,7 @@ from pathlib import Path
 
 CONFIG_FILENAME = ".cobolmigrate.toml"
 
-_KNOWN_KEYS = {"copybook_paths", "format", "strict", "analyzers", "extensions", "output"}
+_KNOWN_KEYS = {"copybook_paths", "format", "strict", "analyzers", "extensions", "output", "fail_on"}
 
 
 @dataclass
@@ -34,6 +34,7 @@ class Config:
     analyzers: list[str] | None = None
     extensions: set[str] | None = None
     output: str | None = None
+    fail_on: list[str] | None = None
     options: dict[str, object] = field(default_factory=dict)
     path: Path | None = None
 
@@ -70,6 +71,7 @@ def load_config(path: Path | None) -> Config:
         analyzers=[str(a) for a in data["analyzers"]] if "analyzers" in data else None,
         extensions=_normalize_extensions(data["extensions"]) if "extensions" in data else None,
         output=str(data["output"]) if "output" in data else None,
+        fail_on=[str(c) for c in data["fail_on"]] if "fail_on" in data else None,
         options={k: v for k, v in data.items() if k not in _KNOWN_KEYS},
         path=path,
     )

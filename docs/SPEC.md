@@ -30,9 +30,13 @@ discover files (ext allowlist) → detect fixed/free → normalize (columns + co
   drop *,/ comments) → regex extract → CobolUnit → resolve copybooks (--copybook-path)
   → aggregate metrics → render (json|md|dot|html, selectable via --format)
 ```
-`--strict` returns a non-zero exit code when any CALL or copybook dependency is unresolved,
-so a scan can gate CI. DOT output is emitted as a combined graph plus separate call-only and
-copybook-only views.
+`--strict` returns a non-zero exit code when any CALL or copybook dependency is unresolved, and
+`--fail-on METRIC[:MAX]` (repeatable; also a `fail_on` config key) fails when any metric exceeds a
+threshold (default 0; list metrics compare their length) — so a scan can gate CI. DOT output is
+emitted as a combined graph plus separate call-only and copybook-only views, with source-unit nodes
+**clustered by subsystem** (top-level directory). The HTML report embeds the dependency graph as an
+inline SVG when Graphviz (`dot`) is available, falling back to embedded DOT source — always
+self-contained (no external assets).
 
 ## OSS ↔ commercial boundary (plugin architecture — shipped in v0.4)
 - Core exposes the entry-point group **`cobol_migrate.analyzers`** (see `plugins.py`).
