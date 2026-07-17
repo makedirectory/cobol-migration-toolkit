@@ -24,7 +24,7 @@ dependencies = []
 # Linters are pinned so CI, pre-commit, and local runs agree (a formatter version
 # bump silently reformats and breaks `ruff format --check`). Keep ruff in sync with
 # .pre-commit-config.yaml when upgrading.
-dev = ["pytest>=8,<9", "ruff==0.8.6", "mypy==1.11.2", "jsonschema>=4,<5"]
+dev = ["pytest>=8,<10", "ruff==0.8.6", "mypy==1.11.2", "jsonschema>=4,<5"]
 
 [project.urls]
 Homepage = "https://github.com/makedirectory/cobol-migration-toolkit"
