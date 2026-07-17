@@ -1,6 +1,6 @@
 # Build Progress — cobol-migration-toolkit
 
-**Last updated:** 2026-07-16 · **Mode:** Clean-slate (beta) · **Latest:** v0.7.0
+**Last updated:** 2026-07-16 · **Mode:** Clean-slate (beta) · **Latest:** v0.8.0
 
 > Tracks milestone **state** for this repo. For **how** we work (build cycle, review gate, layering,
 > non-negotiables), see the shared **`PROCESS.md`** in the [cartograph-web docs handbook](https://github.com/makedirectory/cartograph-web/blob/main/apps/docs/docs/handbook/process.md).
@@ -19,7 +19,7 @@ and a `.cobolmigrate.toml` config (v0.5). CI runs ruff + mypy + pytest on Python
 
 | ID | Milestone | Impl | Tests | Docs | Reviewed | Status |
 |----|-----------|:----:|:-----:|:----:|:--------:|:------:|
-| v0.8 | Filterable HTML table; published `inventory.json` JSON Schema; incremental scans | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| v0.9 | Incremental/cached scans (skip unchanged files); subsystem clustering in HTML | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
 ## Shipped
 
@@ -33,7 +33,8 @@ and a `.cobolmigrate.toml` config (v0.5). CI runs ruff + mypy + pytest on Python
 | v0.4.1 | `ScanContext.read_source` for analyzer source access | ✅ | ✅ | ✅ | ✅ #8 | ✅ |
 | v0.5 | `.cobolmigrate.toml` config (paths/formats/analyzers/extensions/output) | ✅ | ✅ | ✅ | ✅ #9 | ✅ |
 | v0.6 | Subsystem-clustered graphs; HTML embedded graph; `--fail-on` metric gating | ✅ | ✅ | ✅ | ✅ #10 | ✅ |
-| v0.7 | Inventory-analyzer plugin hook; top-level `reports` in schema + MD/HTML | ✅ | ✅ | ✅ | 🔄 | 🔄 |
+| v0.7 | Inventory-analyzer plugin hook; top-level `reports` in schema + MD/HTML | ✅ | ✅ | ✅ | ✅ #11 | ✅ |
+| v0.8 | Published `inventory.json` JSON Schema (`schema` cmd); filterable HTML table | ✅ | ✅ | ✅ | 🔄 | 🔄 |
 
 ### Milestone notes
 

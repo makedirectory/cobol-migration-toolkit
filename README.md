@@ -45,6 +45,9 @@ cobol-migrate scan src --strict --output build   # exit 1 if anything is unresol
 
 # gate CI on any metric threshold (exit 1 if exceeded; default MAX is 0):
 cobol-migrate scan src --fail-on unresolved_call_count --fail-on max_fan_in:20
+
+# emit the JSON Schema for inventory.json (the downstream contract):
+cobol-migrate schema --output inventory.schema.json
 ```
 
 Generated files (subset selectable with `--format {json,md,dot,html,all}`):
@@ -52,7 +55,7 @@ Generated files (subset selectable with `--format {json,md,dot,html,all}`):
 ```text
 build/inventory.json    # versioned schema: units + metrics + unresolved deps
 build/report.md         # summary metrics, unresolved list, per-unit detail
-build/report.html       # self-contained report (stat tiles, unit table, embedded graph)
+build/report.html       # self-contained report (stat tiles, filterable unit table, embedded graph)
 build/dependencies.dot  # combined call/copy graph; clustered by subsystem; unresolved red
 build/calls.dot         # call graph only
 build/copybooks.dot     # copybook graph only

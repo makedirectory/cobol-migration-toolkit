@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -67,6 +68,9 @@ def build_parser() -> argparse.ArgumentParser:
         help="exit non-zero if a metric exceeds MAX (default 0); repeatable. "
         "e.g. --fail-on unresolved_call_count --fail-on max_fan_in:20",
     )
+
+    schema = subparsers.add_parser("schema", help="print the inventory.json JSON Schema")
+    schema.add_argument("--output", type=Path, default=None, metavar="FILE")
     return parser
 
 
@@ -193,8 +197,22 @@ def merge_config(args: argparse.Namespace, config: Config) -> ResolvedScan:
     )
 
 
+def run_schema(output: Path | None) -> int:
+    from .schema import inventory_schema
+
+    text = json.dumps(inventory_schema(), indent=2) + "\n"
+    if output is not None:
+        output.write_text(text, encoding="utf-8")
+        print(f"Wrote inventory JSON Schema to {output}")
+    else:
+        print(text, end="")
+    return 0
+
+
 def main() -> None:
     args = build_parser().parse_args()
+    if args.command == "schema":
+        raise SystemExit(run_schema(args.output))
     if args.command == "scan":
         source = args.source.resolve()
         config = load_config(find_config(source, args.config))
