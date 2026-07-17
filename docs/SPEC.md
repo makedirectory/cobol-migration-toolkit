@@ -81,8 +81,14 @@ self-contained (no external assets).
   through to analyzers via `ScanContext.options`.
 
 ## Output formats
-- `inventory.json` (machine, stable schema), `report.md`, `dependencies.dot`, `report.html` (v0.3).
-- CI-friendly exit codes (v0.3): nonzero on unresolved deps if `--strict`.
+- `inventory.json` (machine, stable schema), `report.md`, `dependencies.dot`, `report.html`.
+- The `report.html` unit table is filterable (inline JS; still self-contained).
+- CI-friendly exit codes: nonzero on unresolved deps if `--strict`, or via `--fail-on`.
+
+## JSON Schema
+`cobol-migrate schema` emits the draft-2020-12 JSON Schema for `inventory.json` (see `schema.py`), kept
+in sync with `analysis.Inventory`. Units and `reports` allow additional properties so plugins can
+extend output; breaking changes bump `schema_version`. A test validates real scan output against it.
 
 ## Accuracy & known limits (state these in every report header)
 - Regex misses dynamic `CALL`, `COPY REPLACING`, embedded SQL/CICS, vendor extensions, generated code.

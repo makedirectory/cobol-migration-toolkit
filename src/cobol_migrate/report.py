@@ -185,7 +185,26 @@ pre { overflow-x: auto; background: #f6f7f9; padding: .75rem; border-radius: 6px
 @media (prefers-color-scheme: dark) { pre { background: #1c1f26; } }
 summary { cursor: pointer; color: #666; }
 @media (prefers-color-scheme: dark) { summary { color: #9aa0aa; } }
+.filter { width: 100%; max-width: 340px; padding: .5rem .7rem; margin: .5rem 0 1rem;
+  border: 1px solid #d7d7d7; border-radius: 8px; font-size: .9rem;
+  background: #fff; color: inherit; }
+@media (prefers-color-scheme: dark) { .filter { background: #1c1f26; border-color: #2c2f36; } }
 """
+
+# Self-contained (inline) client-side filter for the unit table — no external assets.
+_FILTER_SCRIPT = """<script>
+(function () {
+  var q = document.getElementById('unit-filter');
+  var rows = document.querySelectorAll('#units-table tbody tr');
+  if (!q) return;
+  q.addEventListener('input', function () {
+    var v = q.value.toLowerCase();
+    rows.forEach(function (r) {
+      r.style.display = r.textContent.toLowerCase().indexOf(v) > -1 ? '' : 'none';
+    });
+  });
+})();
+</script>"""
 
 
 def _render_graph_html(units: list[CobolUnit], inventory: Inventory) -> str:
@@ -327,13 +346,15 @@ def write_html(units: list[CobolUnit], inventory: Inventory, output: Path) -> No
 {_render_reports_html(inventory)}
 {_render_graph_html(units, inventory)}
 <h2>Units</h2>
+<input id="unit-filter" class="filter" type="search" placeholder="Filter units…" aria-label="Filter units">
 <div class="tablewrap">
-<table>
+<table id="units-table">
 <thead><tr><th>Path</th><th>Kind</th><th>Format</th><th>Program ID</th><th>Lines</th>
 <th>COPY</th><th>CALL</th><th>Paras</th></tr></thead>
 <tbody>{"".join(rows)}</tbody>
 </table>
 </div>
+{_FILTER_SCRIPT}
 </body>
 </html>
 """

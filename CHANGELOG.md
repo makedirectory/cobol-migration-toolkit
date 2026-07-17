@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] — schema & filter
+
+### Added
+- **Published JSON Schema** for `inventory.json` (draft 2020-12) via a new `cobol-migrate schema`
+  command (`--output` to write a file). A test validates real scan output against it.
+- **Filterable unit table** in the HTML report — an inline search box filters rows client-side;
+  the report stays fully self-contained (no external assets).
+- `jsonschema` added as a dev/test dependency.
+
 ## [0.7.0] — inventory analyzers
 
 ### Added
@@ -101,7 +110,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `inventory.json`, `report.md`, and `dependencies.dot` output.
 - `cobol-migrate scan` CLI, tests, and CI.
 
-[Unreleased]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/makedirectory/cobol-migration-toolkit/compare/v0.4.1...v0.5.0

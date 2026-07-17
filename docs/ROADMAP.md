@@ -52,8 +52,12 @@ The guiding boundary: **inventory & discovery = free. Deep semantics, AI docs, e
   `reports`. Enables estate-level rollups (e.g. Cartograph's effort rollup) with no further core changes.
 - ✅ `reports` surfaced in the Markdown and HTML reports; `--analyzers` selects both plugin types.
 
-### v0.8 — next
-- Richer HTML (filterable unit table); `inventory.json` JSON Schema published; incremental/cached scans.
+### v0.8 — schema & filter ✅ (shipped)
+- ✅ Published `inventory.json` **JSON Schema** (draft 2020-12) via `cobol-migrate schema`; validated in tests.
+- ✅ **Filterable** unit table in the HTML report (inline JS, still self-contained).
+
+### v0.9 — next
+- Incremental/cached scans (skip unchanged files by mtime/hash); subsystem clustering in HTML.
 
 ---
 
