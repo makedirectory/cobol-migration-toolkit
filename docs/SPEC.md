@@ -14,12 +14,14 @@ line_count, byte_count
 `inventory.json` =
 ```
 { "schema_version": 1,
-  "units": [CobolUnit...],
+  "analyzers": [ "<unit-analyzer name>", ... ],
+  "units": [CobolUnit... (+ optional "analyses": { "<name>": {...} })],
   "metrics": { unit_count, program_count, copybook_count, call_edges, copy_edges,
                unresolved_call_count, unresolved_copybook_count,
                unreferenced_programs[], unreferenced_copybooks[],
                copybooks_using_replacing[], max_fan_out, max_fan_in },
-  "unresolved": { "copybooks": [...], "calls": [...] } }
+  "unresolved": { "copybooks": [...], "calls": [...] },
+  "reports": { "<inventory-analyzer name>": {...} } }
 ```
 Paid plugins extend the unit with `data_items[]`, `data_flow`, `complexity`, `summary`, etc.
 — they must only **add** fields and bump `schema_version` for any breaking change.
@@ -56,6 +58,15 @@ self-contained (no external assets).
   [project.entry-points."cobol_migrate.analyzers"]
   my_analyzer = "my_pkg.module:MyAnalyzer"
   ```
+- **Inventory analyzers** (v0.7) are a second plugin type via the `cobol_migrate.inventory_analyzers`
+  group. They run once over the built inventory — so they can aggregate per-unit analyzer output — and
+  their result lands in top-level `reports[<name>]`:
+  ```python
+  class InventoryAnalyzer(Protocol):
+      name: str
+      def analyze(self, inventory: Inventory, ctx: ScanContext) -> dict[str, object]: ...
+  ```
+  Ordering: per-unit analyzers run first, then inventory analyzers see the merged `units[i].analyses`.
 - If a paid package (e.g. Cartograph) is installed its analyzers auto-register; otherwise the
   core runs with only its built-in. **No core changes, no relicensing** — the moat is the plugin.
 - `cobol-migrate scan ... --analyzers {all,none,<name>}` (repeatable) selects which run.

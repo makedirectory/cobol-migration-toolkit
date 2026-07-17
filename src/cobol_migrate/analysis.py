@@ -33,6 +33,7 @@ class Inventory(TypedDict):
     units: list[dict[str, object]]
     metrics: Metrics
     unresolved: Unresolved
+    reports: dict[str, dict[str, object]]
 
 
 def build_inventory(
@@ -112,6 +113,7 @@ def build_inventory(
             "copybooks": sorted(unresolved_copybooks),
             "calls": sorted(unresolved_calls),
         },
+        "reports": {},
     }
 
 

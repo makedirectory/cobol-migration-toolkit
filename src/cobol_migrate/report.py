@@ -59,6 +59,12 @@ def write_markdown(units: list[CobolUnit], inventory: Inventory, output: Path) -
             "",
         ]
 
+    reports = inventory["reports"]
+    if reports:
+        lines += ["## Estate reports", ""]
+        for report_name, payload in sorted(reports.items()):
+            lines += [f"### {report_name}", "", "```json", json.dumps(payload, indent=2), "```", ""]
+
     if unresolved["copybooks"] or unresolved["calls"]:
         lines += ["## Unresolved dependencies", ""]
         if unresolved["copybooks"]:
@@ -219,6 +225,17 @@ def _render_graph_html(units: list[CobolUnit], inventory: Inventory) -> str:
     )
 
 
+def _render_reports_html(inventory: Inventory) -> str:
+    reports = inventory["reports"]
+    if not reports:
+        return ""
+    blocks = ["<h2>Estate reports</h2>"]
+    for name, payload in sorted(reports.items()):
+        pretty = html.escape(json.dumps(payload, indent=2))
+        blocks.append(f"<h3>{html.escape(name)}</h3>\n<pre>{pretty}</pre>")
+    return "\n".join(blocks)
+
+
 def _stat_tile(label: str, value: object, warn: bool = False) -> str:
     cls = "tile tile--warn" if warn else "tile"
     return (
@@ -307,6 +324,7 @@ def write_html(units: list[CobolUnit], inventory: Inventory, output: Path) -> No
 <p class="note">{esc(DISCLAIMER)}</p>
 <div class="tiles">{tiles}</div>
 {"".join(banners)}
+{_render_reports_html(inventory)}
 {_render_graph_html(units, inventory)}
 <h2>Units</h2>
 <div class="tablewrap">

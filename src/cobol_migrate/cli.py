@@ -7,7 +7,14 @@ from pathlib import Path
 
 from .analysis import Metrics, build_inventory
 from .config import Config, find_config, load_config
-from .plugins import ScanContext, discover_analyzers, run_analyzers, select_analyzers
+from .plugins import (
+    ScanContext,
+    discover_analyzers,
+    discover_inventory_analyzers,
+    run_analyzers,
+    run_inventory_analyzers,
+    select_analyzers,
+)
 from .report import write_dot, write_html, write_inventory, write_markdown
 from .scanner import index_copybooks, scan_tree
 
@@ -113,10 +120,13 @@ def run_scan(
     copybook_index = index_copybooks(search_roots, extensions)
 
     selected = select_analyzers(discover_analyzers(), analyzers)
+    inventory_selected = select_analyzers(discover_inventory_analyzers(), analyzers)
     ctx = ScanContext(units=units, copybook_index=copybook_index, root=source, options=options or {})
     analyses = run_analyzers(selected, ctx)
     analyzer_names = [a.name for a in selected]
     inventory = build_inventory(units, copybook_index, analyses, analyzer_names)
+    # Inventory analyzers run after per-unit analyses are merged, so they can aggregate them.
+    inventory["reports"] = run_inventory_analyzers(inventory_selected, inventory, ctx)
 
     if "json" in formats:
         write_inventory(inventory, output)
@@ -135,6 +145,8 @@ def run_scan(
     )
     if analyzer_names:
         print(f"  analyzers: {', '.join(analyzer_names)}")
+    if inventory["reports"]:
+        print(f"  reports: {', '.join(sorted(inventory['reports']))}")
     unresolved = metrics["unresolved_call_count"] + metrics["unresolved_copybook_count"]
     if unresolved:
         print(

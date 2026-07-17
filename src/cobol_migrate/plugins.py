@@ -6,10 +6,20 @@ LLM documentation, effort scoring — the commercial "Cartograph" tier) plugs in
 If a commercial package is installed its analyzers register automatically; otherwise the
 core runs with only its built-in reference analyzer. No core changes, no relicensing.
 
+There are two kinds of analyzer:
+
+- **unit analyzers** (``cobol_migrate.analyzers``) run per ``CobolUnit``; results merge into
+  ``units[i].analyses``.
+- **inventory analyzers** (``cobol_migrate.inventory_analyzers``) run once over the whole built
+  inventory (so they can aggregate per-unit analyzer output); results land in top-level ``reports``.
+
 An external package registers analyzers in its own ``pyproject.toml``::
 
     [project.entry-points."cobol_migrate.analyzers"]
     my_analyzer = "my_pkg.module:MyAnalyzer"
+
+    [project.entry-points."cobol_migrate.inventory_analyzers"]
+    my_rollup = "my_pkg.module:MyRollup"
 """
 
 from __future__ import annotations
@@ -18,14 +28,26 @@ import sys
 from dataclasses import dataclass, field
 from importlib.metadata import entry_points
 from pathlib import Path
-from typing import Protocol, runtime_checkable
+from typing import TYPE_CHECKING, Protocol, TypeVar, runtime_checkable
 
 from .scanner import CobolUnit, normalize_source
 
+if TYPE_CHECKING:
+    from .analysis import Inventory
+
 ENTRY_POINT_GROUP = "cobol_migrate.analyzers"
+INVENTORY_ENTRY_POINT_GROUP = "cobol_migrate.inventory_analyzers"
 
 # {unit path: {analyzer name: result dict}}
 AnalysisResults = dict[str, dict[str, dict[str, object]]]
+
+
+@runtime_checkable
+class _Named(Protocol):
+    name: str
+
+
+_A = TypeVar("_A", bound=_Named)
 
 
 @dataclass
@@ -87,7 +109,11 @@ def discover_analyzers() -> list[Analyzer]:
     return sorted(found, key=lambda a: a.name)
 
 
-def select_analyzers(analyzers: list[Analyzer], selected: list[str] | None) -> list[Analyzer]:
+def select_analyzers(analyzers: list[_A], selected: list[str] | None) -> list[_A]:
+    """Filter analyzers by name; works for both unit and inventory analyzers.
+
+    ``None``/``all`` selects everything; ``none`` selects nothing; otherwise by name.
+    """
     if selected == ["none"]:
         return []
     if not selected or "all" in selected:
@@ -110,3 +136,44 @@ def run_analyzers(analyzers: list[Analyzer], ctx: ScanContext) -> AnalysisResult
             if out:
                 results.setdefault(unit.path, {})[analyzer.name] = out
     return results
+
+
+@runtime_checkable
+class InventoryAnalyzer(Protocol):
+    name: str
+
+    def analyze(self, inventory: Inventory, ctx: ScanContext) -> dict[str, object]:
+        """Return an estate-level report over the whole inventory; lands in ``reports[name]``."""
+        ...
+
+
+def discover_inventory_analyzers() -> list[InventoryAnalyzer]:
+    """Inventory analyzers registered via the entry-point group, sorted by name (none built in)."""
+    found: list[InventoryAnalyzer] = []
+    seen: set[str] = set()
+    for ep in entry_points(group=INVENTORY_ENTRY_POINT_GROUP):
+        try:
+            obj = ep.load()
+            instance = obj() if isinstance(obj, type) else obj
+        except Exception as exc:  # defensive: a broken plugin must not abort a scan
+            print(f"warning: failed to load inventory analyzer '{ep.name}': {exc}", file=sys.stderr)
+            continue
+        if instance.name not in seen:
+            seen.add(instance.name)
+            found.append(instance)
+    return sorted(found, key=lambda a: a.name)
+
+
+def run_inventory_analyzers(
+    analyzers: list[InventoryAnalyzer], inventory: Inventory, ctx: ScanContext
+) -> dict[str, dict[str, object]]:
+    reports: dict[str, dict[str, object]] = {}
+    for analyzer in analyzers:
+        try:
+            out = analyzer.analyze(inventory, ctx)
+        except Exception as exc:  # a plugin failing must not abort the scan
+            print(f"warning: inventory analyzer '{analyzer.name}' failed: {exc}", file=sys.stderr)
+            continue
+        if out:
+            reports[analyzer.name] = out
+    return reports
