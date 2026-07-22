@@ -1,0 +1,54 @@
+name: release
+
+# Publishes the package to PyPI when a GitHub Release is published, using PyPI
+# Trusted Publishing (OIDC) — no API token is stored in the repo. One-time setup:
+# on pypi.org add a "pending publisher" for project cobol-migration-toolkit with
+# owner=makedirectory, repo=cobol-migration-toolkit, workflow=release.yml,
+# environment=pypi. See DEVELOPING.md / the release notes for the full steps.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --upgrade build
+      - run: python -m build
+      - name: Verify built version matches the release tag
+        if: github.event_name == 'release'
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          file=$(ls dist/*.tar.gz)
+          case "$file" in
+            *"-$tag.tar.gz") echo "OK: $file matches tag $tag" ;;
+            *) echo "::error::Tag $tag does not match built artifact $file"; exit 1 ;;
+          esac
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/cobol-migration-toolkit
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
